@@ -1,6 +1,6 @@
 {
   "homepage": "http://NastyaZhilko.github.io/Todolist/",
-  "name": "it-incubator-todolist-ts",
+  "name": "todolist-ts",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
