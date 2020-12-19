@@ -18,14 +18,14 @@ export type ChangeTaskStatusACType = {
     isDone:boolean
     todolistId:string
 }
-export type changeTaskTitleACType = {
+export type ChangeTaskTitleACType = {
     type: 'CHANGE-TASK-TITLE'
     taskId: string
     title:string
     todolistId:string
 }
 export type ActionType =
-    RemoveTaskACType| AddTaskACType | ChangeTaskStatusACType|changeTaskTitleACType|AddTodolistActionType| RemoveTodolistActionType
+    RemoveTaskACType| AddTaskACType | ChangeTaskStatusACType|ChangeTaskTitleACType|AddTodolistActionType| RemoveTodolistActionType
 
 export const tasksReducer = (state: TasksStateType, action: ActionType):TasksStateType => {
     switch (action.type) {
@@ -86,7 +86,7 @@ export const changeTaskStatusAC = (taskId: string, isDone:boolean, todolistId:st
     return {type: 'CHANGE-TASK-STATUS', taskId, isDone, todolistId}
 }
 
-export const  changeTaskTitleAC = (taskId: string, title:string, todolistId:string): changeTaskTitleACType => {
+export const  changeTaskTitleAC = (taskId: string, title:string, todolistId:string): ChangeTaskTitleACType => {
     return {type: 'CHANGE-TASK-TITLE', taskId, title, todolistId}
 }
 
