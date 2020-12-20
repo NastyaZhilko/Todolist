@@ -62,8 +62,8 @@ export function Todolist(props: PropsType) {
                         }
                         return <div key={t.id} className={t.isDone ? 'is-done' : ""}>
                             <Checkbox
-                                   onChange={onChangeStatusHandler}
-                                   checked={t.isDone}/>
+                                onChange={onChangeStatusHandler}
+                                checked={t.isDone}/>
 
                             <EditableSpan title={t.title} onChange={onChangeTitleHandler}/>
 
@@ -93,5 +93,4 @@ export function Todolist(props: PropsType) {
             </div>
         </div>
     )}
-
 
