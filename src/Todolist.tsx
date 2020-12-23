@@ -27,26 +27,27 @@ type PropsType = {
 }
 
 export const Todolist = React.memo((props: PropsType) => {
-    const removeTodolist = () => {
+    const removeTodolist = useCallback(() => {
         props.removeTodolist(props.id)
-    }
+    },[props.removeTodolist,props.id])
+    const addTask = useCallback((title: string) => {
+        props.addTask(title, props.id)
+    }, [props.addTask, props.id])
     const changeTodolistTitle = useCallback((newTitle: string) => {
         props.changeTodolistTitle(props.id, newTitle)
     }, [props.id, props.changeTodolistTitle])
     const onAllClickHandler = useCallback(() => props.changeFilter('All', props.id), [props.changeFilter, props.id])
     const onActiveClickHandler = useCallback(() => props.changeFilter('Active', props.id), [props.changeFilter, props.id])
     const onCompletedClickHandler = useCallback(() => props.changeFilter('Completed', props.id), [props.changeFilter, props.id])
-    const addTask = useCallback((title: string) => {
-        props.addTask(title, props.id)
-    }, [props.addTask, props.id])
 
     let tasksForTodolist = props.tasks
     if (props.filter === 'Active') {
-        tasksForTodolist = props.tasks.filter(t => t.isDone === false);
+        tasksForTodolist = props.tasks.filter(task => task.isDone === false);
     }
     if (props.filter === 'Completed') {
-        tasksForTodolist = props.tasks.filter(t => t.isDone === true);
+        tasksForTodolist = props.tasks.filter(task => task.isDone === true);
     }
+
 
     return (
         <div>
@@ -59,7 +60,7 @@ export const Todolist = React.memo((props: PropsType) => {
             <AddItemForm addItem={addTask}/>
             <div>
                 {
-                    props.tasks.map(t =>
+                    tasksForTodolist.map(t =>
                         <Task
                         changeTaskStatus={props.changeTaskStatus}
                         changeTaskTitle={props.changeTaskTitle}
