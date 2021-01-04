@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
 });
 
 //типизация приходит на основании анализа того, что возвращает функция rootReducer
-export type AppRootState = ReturnType<typeof rootReducer>
+export type AppRootStateType = ReturnType<typeof rootReducer>
 
 export const store = createStore(rootReducer);
 
