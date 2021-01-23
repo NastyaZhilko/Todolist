@@ -2,12 +2,12 @@ import React, {ChangeEvent, useCallback} from "react";
 import {Checkbox, IconButton} from "@material-ui/core";
 import {EditableSpan} from "./EditableSpan";
 import {Delete} from "@material-ui/icons";
-import {TaskType} from "./Todolist";
+import {TaskStatuses, TaskType} from "./api/todolist-api";
 
 export type  TaskPropsType = {
-    changeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void
-    changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
-    removeTask: (taskId: string, todolistId: string) => void
+    changeTaskStatus: (id: string, status: TaskStatuses, todolistId: string) => void
+    changeTaskTitle: (id: string, newTitle: string, todolistId: string) => void
+    removeTask: (id: string, todolistId: string) => void
     task: TaskType
     todolistId: string
 }
@@ -16,17 +16,19 @@ export const Task = React.memo ((props: TaskPropsType) => {
         props.removeTask(props.task.id, props.todolistId)
     }
     const onChangeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        props.changeTaskStatus(props.task.id, e.currentTarget.checked, props.todolistId);
+        let newIsDoneValue=e.currentTarget.checked
+        props.changeTaskStatus(props.task.id, newIsDoneValue ? TaskStatuses.Completed : TaskStatuses.New, props.todolistId);
 
     }
     const onChangeTitleHandler = useCallback((newValue: string) => {
         props.changeTaskTitle(props.task.id, newValue, props.todolistId);
 
     },[props.task.id,props.changeTaskTitle,props.todolistId])
-    return <div key={props.task.id} className={props.task.isDone ? 'is-done' : ""}>
+    return <div key={props.task.id} className={props.task.status===TaskStatuses.Completed ? 'is-done' : ""}>
         <Checkbox
             onChange={onChangeStatusHandler}
-            checked={props.task.isDone}/>
+            color='primary'
+            checked={props.task.status===TaskStatuses.Completed}/>
 
         <EditableSpan title={props.task.title} onChange={onChangeTitleHandler}/>
 

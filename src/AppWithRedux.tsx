@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./Todolist";
+import {Todolist} from "./Todolist";
 import {AddItemForm} from "./AddItemForm";
 import Toolbar from '@material-ui/core/Toolbar';
 import {AppBar, Button, Container, Grid, IconButton, Typography} from "@material-ui/core";
@@ -10,18 +10,16 @@ import {
     addTodolistAC,
     changeTodolistFilterAC,
     changeTodolistTitleAC,
-    removeTodolistAC
+    FilterValueType,
+    removeTodolistAC,
+    TodolistDomainType
 } from "./state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
+import {TaskStatuses, TaskType} from "./api/todolist-api";
 
-export type FilterValueType = 'All' | 'Active' | 'Completed';
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValueType
-}
+
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
@@ -32,7 +30,7 @@ function AppWithRedux() {
     //ф-ия диспатч(используем кух useDispatch из библиотеки React)
     const dispatch = useDispatch();
     //ф-ия селектор (
-    const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
+    const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
 //функции для тасок ниже
     //ф-ия удаления таски
@@ -48,8 +46,8 @@ function AppWithRedux() {
     }, [dispatch])
 
     //ф-ия изменения статуса таски
-    const changeStatus = useCallback((taskId: string, isDone: boolean, todolistId: string) => {
-        dispatch(changeTaskStatusAC(taskId, isDone, todolistId))
+    const changeStatus = useCallback((taskId: string, status: TaskStatuses, todolistId: string) => {
+        dispatch(changeTaskStatusAC(taskId, status, todolistId))
     }, [dispatch])
 
     //ф-ия изменения названия таски
