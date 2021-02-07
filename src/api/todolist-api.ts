@@ -14,29 +14,34 @@ export type TodolistType = {
     order: number
     title: string
 }
-type CommonResponseType<T={}>={
+export type CommonResponseType<T = {}> = {
     resultCode: number
     messages: Array<string>
-    fieldsErrors:Array<string>
     data: T
 }
 
-export enum TaskStatuses{
-    New=0,
-    InProgress=1,
-    Completed=2,
-    Draft=3
+export enum ResultCodeStatuses {
+    Success = 0,
+    Error = 1,
+    Captcha = 10
 }
 
-export enum TaskPriorities{
-    Low=0,
-    Middle=1,
-    Mi=2,
-    Urgently=3,
-    Later=4
+export enum TaskStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
 }
 
-export type TaskType={
+export enum TaskPriorities {
+    Low = 0,
+    Middle = 1,
+    Mi = 2,
+    Urgently = 3,
+    Later = 4
+}
+
+export type TaskType = {
     id: string
     title: string
     status: TaskStatuses
@@ -49,22 +54,20 @@ export type TaskType={
     description: string
     completed: boolean
 }
-export type UpdateTaskType={
+export type UpdateTaskType = {
     title: string
     description: string
-    completed: boolean
-    status: number
-    priority: number
+    status: TaskStatuses
+    priority: TaskPriorities
     startDate: string
     deadline: string
 }
-type GetTasksResponse={
-    totalCount:number
-    error:string|null
+
+type GetTasksResponse = {
+    totalCount: number
+    error: string | null
     items: Array<TaskType>
 }
-
-
 
 export const todoApi = {
     getTodos() {
@@ -79,16 +82,37 @@ export const todoApi = {
     updateTodoTitle(todolistId: string, title: string) {
         return instance.put<CommonResponseType>(`todo-lists/${todolistId}`, {title})
     },
-    getTasks(todolistId: string){
+    getTasks(todolistId: string) {
         return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
     },
-    deleteTask(todolistId: string, taskId: string){
+    deleteTask(todolistId: string, taskId: string) {
         return instance.delete<CommonResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)
     },
-    postTask(todolistId: string, taskTitle: string) {
-        return instance.post<CommonResponseType<TaskType>>(`todo-lists/${todolistId}/tasks`, {title:taskTitle})
+    createTask(todolistId: string, taskTitle: string) {
+        return instance.post<CommonResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks`, {title: taskTitle})
     },
-    updateTaskTitle(todolistId: string, taskId: string,  model: UpdateTaskType) {
+    updateTask(todolistId: string, taskId: string, model: UpdateTaskType) {
         return instance.put<CommonResponseType<TaskType>>(`todo-lists/${todolistId}/tasks/${taskId}`, model)
+    }
+}
+
+export type LoginParamsType={
+    email:string
+    password:string
+    rememberMe:boolean
+    captcha?:string
+}
+
+type MeResponseType={
+    id:number
+    email:string
+    login:string
+}
+export const authApi={
+    login(data:LoginParamsType){
+        return instance.post<CommonResponseType<{ userId?: number }>>('auth/login', data)
+    },
+    me(){
+        return instance.get<CommonResponseType<MeResponseType>>('auth/me')
     }
 }
